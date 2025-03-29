@@ -14,8 +14,8 @@ local playerProjectiles = {}
 local isPlayerAlive = true;
 
 local enemies = {}
-local enemySpawnTime = 1
-local currentEnemy = enemySpawnTime
+local enemySpawnDelay = 1
+local currentEnemy = enemySpawnDelay
 local enemyImage
 local enemyMargin = 0
 
@@ -59,6 +59,9 @@ function love.draw()
 end
 
 function love.update(dt)
+    if KB.isDown("r") and not isPlayerAlive then
+        Reset()
+    end
     if KB.isDown('escape') then
         love.event.quit()
     end
@@ -99,7 +102,7 @@ function love.update(dt)
     currentEnemy = currentEnemy - (1 * dt)
 
     if currentEnemy < 0 then
-        currentEnemy = enemySpawnTime
+        currentEnemy = enemySpawnDelay
 
         math.randomseed(os.time())
 
@@ -136,4 +139,17 @@ function love.update(dt)
             end
         end
     end
+end
+
+function Reset()
+    playerProjectiles = {}
+    enemies = {}
+    currentEnemy = enemySpawnDelay
+    playerCurrentShot = playerShotDelay
+
+    player.x = (G.getWidth() - player.image:getWidth()) / 2
+    player.y = (G.getHeight() - player.image:getHeight()) / 2
+
+    points = 0
+    isPlayerAlive = true
 end
